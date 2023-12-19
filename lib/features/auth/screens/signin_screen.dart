@@ -30,7 +30,7 @@ class SignInScreen extends StatelessWidget {
           SizedBox(height: AppConstant.height20),
           Image.asset(ImagePath.loginEmote),
           SizedBox(height: AppConstant.height40),
-          const AppButton(text: StringUtils.continueWithGoogle, icon: ImagePath.google),
+          const AppButton(text: StringUtils.continueWithGoogle, icon: ImagePath.google, isGoogleSignIn: true,),
         ],
       ),
     );
