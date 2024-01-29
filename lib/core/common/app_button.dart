@@ -7,16 +7,19 @@ import 'package:reddit/theme/palette.dart';
 
 class AppButton extends ConsumerWidget {
   const AppButton(
-      {Key? key, required this.text, this.onPressed, required this.icon, this.isGoogleSignIn = false})
-      : super(key: key);
+      {super.key,
+      required this.text,
+      this.onPressed,
+      required this.icon,
+      this.isGoogleSignIn = false});
 
   final String text;
   final void Function()? onPressed;
   final String icon;
   final bool isGoogleSignIn;
 
-  void signInWithGoogle(WidgetRef ref) {
-   ref.read(authControllerProvider).signInWithGoogle();
+  void signInWithGoogle(BuildContext context, WidgetRef ref) {
+    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
   }
 
   @override
@@ -24,12 +27,20 @@ class AppButton extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(AppConstant.width15),
       child: ElevatedButton.icon(
-        onPressed: isGoogleSignIn ? () => signInWithGoogle(ref) : onPressed,
-        icon: Image.asset(ImagePath.google, width: AppConstant.width35,),
-        label: Text(text, style: TextStyle(fontSize: AppConstant.width15),),
+        onPressed:
+            isGoogleSignIn ? () => signInWithGoogle(context, ref) : onPressed,
+        icon: Image.asset(
+          ImagePath.google,
+          width: AppConstant.width35,
+        ),
+        label: Text(
+          text,
+          style: TextStyle(fontSize: AppConstant.width15),
+        ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Palette.greyColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppConstant.radius25)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppConstant.radius25)),
           minimumSize: Size(double.infinity, AppConstant.height50),
         ),
       ),
