@@ -1,19 +1,37 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reddit/core/models/user_model.dart';
 import 'package:reddit/features/auth/repository/auth_repository.dart';
 
-final authControllerProvider = Provider<AuthController>(
+import '../../../core/utils/show_snack_bar.dart';
+// saves and provides userModelData gotten from database
+final userModelProvider = StateProvider<UserModel?>((ref) => null);
+
+final authControllerProvider = StateNotifierProvider<AuthController, bool>(
   (ref) => AuthController(
     authRepository: ref.read(authRepositoryProvider),
+    ref: ref,
   ),
- );
+);
 
-class AuthController {
+class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
+  final Ref _ref;
 
-  AuthController({required AuthRepository authRepository})
-      : _authRepository = authRepository;
+  AuthController({required AuthRepository authRepository, required Ref ref})
+      : _authRepository = authRepository,
+        _ref = ref,
+        super(false);
 
-  void signInWithGoogle() {
-    _authRepository.signInWithGoogle();
+  void signInWithGoogle(BuildContext context) async {
+    state = true;
+    final user = await _authRepository.signInWithGoogle();
+    state = false;
+    user.fold(
+      (failure) => showSnackBar(context, failure.message),
+      // updates data in stateProvider
+      (userModel) =>
+          _ref.read(userModelProvider.notifier).update((state) => userModel),
+    );
   }
 }
