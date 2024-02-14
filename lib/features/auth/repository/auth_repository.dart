@@ -37,6 +37,7 @@ class AuthRepository {
   CollectionReference get _users =>
       _firestore.collection(FirebaseConstants.users);
 
+  // gets auth state changes
   Stream<User?> get authStateChange => _firebaseAuth.authStateChanges();
 
   /// to return user's data
